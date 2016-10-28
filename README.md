@@ -13,7 +13,7 @@ class ExamplePage < ScrapedPage
   field :title do
     noko.at_css('h1').text
   end
-  
+
   field :more_information do
     noko.at_css('a')[:href]
   end
