@@ -26,5 +26,5 @@ puts ExamplePage.new('http://example.com').to_h
 The default strategy for retrieving pages is to make an http request to retrieve them. If you'd also like to archive a copy of the page you're scraping into a git branch, you can pass a `:strategy` option to the constructor:
 
 ```ruby
-ExamplePage.new('http://example.com', strategy: ScrapedPage::Strategy::LiveRequestArchive)
+ExamplePage.new('http://example.com', strategy: ScrapedPage::Strategy::LiveRequestArchive.new)
 ```
