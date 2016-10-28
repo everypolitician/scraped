@@ -1,5 +1,5 @@
 require 'scraped_page/version'
 
-module ScrapedPage
+class ScrapedPage
   # Your code goes here...
 end
