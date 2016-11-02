@@ -48,7 +48,7 @@ gem to store a copy of the pages you scrape in a git branch in your scraper's re
 
 ## Custom strategies
 
-If for some reason you can't scrape a site using one of the build in strategies
+If for some reason you can't scrape a site using one of the built in strategies
 then you can provide your own strategy.
 
 A strategy is an object that responds to a `get` method and returns a
