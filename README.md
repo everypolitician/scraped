@@ -4,7 +4,11 @@ Write declarative scrapers in Ruby
 
 ## Usage
 
-Create a subclass of `ScrapedPage` for each page you wish to scrape.
+Create a subclass of `ScrapedPage` for each _type_ of page you wish to scrape.
+
+For example if you were scraping a list of people you might have a
+`PeopleListPage` class for the list page and a `PersonPage` class for an
+individual person's page.
 
 ```ruby
 require 'scraped_page'
