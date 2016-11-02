@@ -18,8 +18,20 @@ class ExamplePage < ScrapedPage
     noko.at_css('a')[:href]
   end
 end
+```
 
-puts ExamplePage.new('http://example.com').to_h
+Then you can create a new instance and pass in a url
+
+```ruby
+page = ExamplePage.new(url: 'http://example.com')
+
+page.title
+# => "Example Domain"
+
+page.more_information
+# => "http://www.iana.org/domains/reserved"
+
+page.to_h
 # => { :title => "Example Domain", :more_information => "http://www.iana.org/domains/reserved" }
 ```
 
