@@ -1,4 +1,1 @@
-class ScrapedPage
-  class Strategy
-  end
-end
+require 'scraped_page/strategy/live_request'
