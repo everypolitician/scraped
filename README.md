@@ -56,7 +56,7 @@ A strategy is an object that responds to a `get` method and returns a
 
 ```ruby
 class FilesystemStrategy
-  def get(url)
+  def response(url)
     body = File.read(Digest::SHA1.hexdigest(url) + '.html')
     ScrapedPage::Response.new(body: body)
   end
