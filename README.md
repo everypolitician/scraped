@@ -51,14 +51,13 @@ gem to store a copy of the pages you scrape in a git branch in your scraper's re
 If for some reason you can't scrape a site using one of the built in strategies
 then you can provide your own strategy.
 
-A strategy is an object that responds to a `get` method and returns a
-`ScrapedPage::Response`.
+A strategy is an object that implements a `response` method which returns a
+`Hash` with at least a `:body` key and optionally `:status` and `:headers` keys.
 
 ```ruby
 class FilesystemStrategy
   def response(url)
-    body = File.read(Digest::SHA1.hexdigest(url) + '.html')
-    ScrapedPage::Response.new(body: body)
+    { body: File.read(Digest::SHA1.hexdigest(url) + '.html') }
   end
 end
 ```
