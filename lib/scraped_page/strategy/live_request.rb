@@ -16,7 +16,7 @@ class ScrapedPage
       private
 
       def log(message)
-        warn "[#{self.class}] #{message}"
+        warn "[#{self.class}] #{message}" if ENV.key?('VERBOSE')
       end
     end
   end
