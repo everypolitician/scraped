@@ -2,6 +2,7 @@
 require 'scraped_page/version'
 require 'scraped_page/strategy/live_request'
 require 'scraped_page/strategy/live_request_archive'
+require 'scraped_page/strategy/archive_request'
 require 'scraped_page/response'
 require 'nokogiri'
 require 'field_serializer'
