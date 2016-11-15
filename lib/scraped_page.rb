@@ -8,20 +8,19 @@ require_rel 'scraped_page'
 class ScrapedPage
   include FieldSerializer
 
-  def initialize(url:, strategy: Strategy::LiveRequest.new)
-    @url = url
-    @strategy = strategy
+  def initialize(response:)
+    @response = response
   end
 
   private
 
-  attr_reader :url, :strategy
+  attr_reader :response
+
+  def url
+    response.url
+  end
 
   def noko
     @noko ||= Nokogiri::HTML(response.body)
-  end
-
-  def response
-    @response ||= Response.new(strategy.response(url))
   end
 end
