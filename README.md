@@ -43,7 +43,7 @@ end
 Then you can create a new instance and pass in a url
 
 ```ruby
-page = ExamplePage.new(url: 'http://example.com')
+page = ExamplePage.new(response: Scraped::Request.new(url: 'http://example.com').response)
 
 page.title
 # => "Example Domain"
@@ -60,7 +60,7 @@ page.to_h
 The default strategy for retrieving pages is `Scraped::Strategy::LiveRequest`. If you'd also like to archive a copy of the page you're scraping into a git branch, you can pass a `:strategy` option to the constructor:
 
 ```ruby
-ExamplePage.new(url: 'http://example.com', strategy: Scraped::Strategy::LiveRequestArchive.new)
+# TODO: Add an example of reading and writing to the archive once we've straightened out the Scraped::Request constructor interface.
 ```
 
 This will use the [`scraped_page_archive`](https://github.com/everypolitician/scraped_page_archive)
