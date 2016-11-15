@@ -1,11 +1,12 @@
 class ScrapedPage
   class Response
-    attr_reader :status, :headers, :body
+    attr_reader :status, :headers, :body, :url
 
-    def initialize(body:, status: 200, headers: {})
+    def initialize(body:, url:, status: 200, headers: {})
       @status = status
       @headers = headers
       @body = body
+      @url = url
     end
   end
 end
