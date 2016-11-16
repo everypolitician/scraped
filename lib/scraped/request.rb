@@ -11,7 +11,7 @@ class Scraped
     def response(processors = [])
       abort "Failed to fetch #{url}" if first_successful_response.nil?
       response = Response.new(first_successful_response.merge(url: url))
-      processors.reduce(response) { |a, e| e.call(a) }
+      processors.reduce(response) { |r, processor| processor.call(r) }
     end
 
     private
