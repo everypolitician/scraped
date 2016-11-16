@@ -12,7 +12,6 @@ class Scraped
       abort "Failed to fetch #{url}" if first_successful_response.nil?
       response = Response.new(first_successful_response.merge(url: url))
       processors.reduce(response) { |a, e| e.call(a) }
-      response
     end
 
     private
