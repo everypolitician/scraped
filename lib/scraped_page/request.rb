@@ -10,16 +10,16 @@ class ScrapedPage
     end
 
     def response
-      abort "Couldn't find a response for #{url}" if readers_response.nil?
-      response = Response.new(readers_response.merge(url: url))
+      abort "Failed to fetch #{url}" if first_successful_response.nil?
+      response = Response.new(first_successful_response.merge(url: url))
       writers.each { |w| w.save_response(response) }
       response
     end
 
     private
 
-    def readers_response(url)
-      @readers_response ||=
+    def first_successful_response
+      @first_successful_response ||=
         readers.lazy.map { |r| r.response(url) }.reject(&:nil?).first
     end
 
