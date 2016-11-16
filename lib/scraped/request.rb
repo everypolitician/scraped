@@ -3,16 +3,15 @@ require 'scraped/response'
 
 class Scraped
   class Request
-    def initialize(url:, readers: [Strategy::LiveRequest.new], writers: [])
+    def initialize(url:, readers: [Strategy::LiveRequest.new])
       @url = url
       @readers = readers
-      @writers = writers
     end
 
-    def response
+    def response(processors = [])
       abort "Failed to fetch #{url}" if first_successful_response.nil?
       response = Response.new(first_successful_response.merge(url: url))
-      writers.each { |w| w.save_response(response) }
+      processors.reduce(response) { |r, handler| handler.call(r) }
       response
     end
 
@@ -23,6 +22,6 @@ class Scraped
         readers.lazy.map { |r| r.response(url) }.reject(&:nil?).first
     end
 
-    attr_reader :url, :readers, :writers
+    attr_reader :url, :readers
   end
 end
