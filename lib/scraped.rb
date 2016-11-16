@@ -1,11 +1,8 @@
 # frozen_string_literal: true
-require 'scraped/version'
-require 'scraped/strategy/live_request'
-require 'scraped/strategy/live_request_archive'
-require 'scraped/request'
-require 'scraped/response'
 require 'nokogiri'
 require 'field_serializer'
+require 'require_all'
+require_rel 'scraped'
 
 # Abstract class which scrapers can extend to implement their functionality.
 class Scraped
