@@ -18,5 +18,17 @@ describe Scraped::HTML do
     it 'returns the expected content' do
       ExamplePage.new(response: response).content.must_equal 'Hi there!'
     end
+
+    describe 'with a custom noko instance' do
+      let(:fragment) do
+        Nokogiri::HTML.fragment('<p class="test-content">Replacement</p>')
+      end
+
+      let(:page) { ExamplePage.new(response: response, noko: fragment) }
+
+      it 'returns the replacement content' do
+        page.content.must_equal 'Replacement'
+      end
+    end
   end
 end
