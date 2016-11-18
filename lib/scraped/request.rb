@@ -8,10 +8,10 @@ class Scraped
       @readers = readers
     end
 
-    def response(processors = [])
+    def response(response_decorators = [])
       abort "Failed to fetch #{url}" if first_successful_response.nil?
       response = Response.new(first_successful_response.merge(url: url))
-      processors.reduce(response) { |r, processor| processor.call(r) }
+      response_decorators.reduce(response) { |r, decorator| decorator.call(r) }
     end
 
     private
