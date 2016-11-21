@@ -1,4 +1,4 @@
-class ScrapedPage
+class Scraped
   class Response
     attr_reader :status, :headers, :body, :url
 

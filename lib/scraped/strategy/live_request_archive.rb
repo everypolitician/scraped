@@ -1,7 +1,7 @@
-require 'scraped_page/strategy/live_request'
+require 'scraped/strategy/live_request'
 require 'scraped_page_archive'
 
-class ScrapedPage
+class Scraped
   module Strategy
     class LiveRequestArchive < LiveRequest
       def response(url)

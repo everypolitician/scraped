@@ -1,4 +1,4 @@
-# ScrapedPage
+# Scraped
 
 Write declarative scrapers in Ruby
 
@@ -7,7 +7,7 @@ Write declarative scrapers in Ruby
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'scraped_page'
+gem 'scraped'
 ```
 
 And then execute:
@@ -16,20 +16,20 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install scraped_page
+    $ gem install scraped
 
 ## Usage
 
-Create a subclass of `ScrapedPage` for each _type_ of page you wish to scrape.
+Create a subclass of `Scraped` for each _type_ of page you wish to scrape.
 
 For example if you were scraping a list of people you might have a
 `PeopleListPage` class for the list page and a `PersonPage` class for an
 individual person's page.
 
 ```ruby
-require 'scraped_page'
+require 'scraped'
 
-class ExamplePage < ScrapedPage
+class ExamplePage < Scraped
   field :title do
     noko.at_css('h1').text
   end
@@ -57,10 +57,10 @@ page.to_h
 
 ## Archiving scraped pages
 
-The default strategy for retrieving pages is `ScrapedPage::Strategy::LiveRequest`. If you'd also like to archive a copy of the page you're scraping into a git branch, you can pass a `:strategy` option to the constructor:
+The default strategy for retrieving pages is `Scraped::Strategy::LiveRequest`. If you'd also like to archive a copy of the page you're scraping into a git branch, you can pass a `:strategy` option to the constructor:
 
 ```ruby
-ExamplePage.new(url: 'http://example.com', strategy: ScrapedPage::Strategy::LiveRequestArchive.new)
+ExamplePage.new(url: 'http://example.com', strategy: Scraped::Strategy::LiveRequestArchive.new)
 ```
 
 This will use the [`scraped_page_archive`](https://github.com/everypolitician/scraped_page_archive)
@@ -82,7 +82,7 @@ class FilesystemStrategy
 end
 ```
 
-Then you can pass that strategy when creating an instance of your `ScrapedPage` subclass:
+Then you can pass that strategy when creating an instance of your `Scraped` subclass:
 
 ```ruby
 ExamplePage.new(url: 'http://example.com', strategy: FilesystemStrategy.new)
@@ -96,7 +96,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/everypolitician/scraped_page.
+Bug reports and pull requests are welcome on GitHub at https://github.com/everypolitician/scraped.
 
 ## License
 

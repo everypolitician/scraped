@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'scraped_page/version'
+require 'scraped/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'scraped_page'
-  spec.version       = ScrapedPage::VERSION
+  spec.name          = 'scraped'
+  spec.version       = Scraped::VERSION
   spec.authors       = ['EveryPolitician']
   spec.email         = ['team@everypolitician.org']
 
   spec.summary       = 'Write declarative scrapers in Ruby'
-  spec.homepage      = 'https://github.com/everypolitician/scraped_page'
+  spec.homepage      = 'https://github.com/everypolitician/scraped'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

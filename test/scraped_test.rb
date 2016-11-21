@@ -1,7 +1,7 @@
 require 'test_helper'
 
-describe ScrapedPage do
+describe Scraped do
   it 'has a version number' do
-    ::ScrapedPage::VERSION.wont_be_nil
+    ::Scraped::VERSION.wont_be_nil
   end
 end

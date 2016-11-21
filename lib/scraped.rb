@@ -1,13 +1,13 @@
 # frozen_string_literal: true
-require 'scraped_page/version'
-require 'scraped_page/strategy/live_request'
-require 'scraped_page/strategy/live_request_archive'
-require 'scraped_page/response'
+require 'scraped/version'
+require 'scraped/strategy/live_request'
+require 'scraped/strategy/live_request_archive'
+require 'scraped/response'
 require 'nokogiri'
 require 'field_serializer'
 
 # Abstract class which scrapers can extend to implement their functionality.
-class ScrapedPage
+class Scraped
   include FieldSerializer
 
   def initialize(url:, strategy: Strategy::LiveRequest.new)

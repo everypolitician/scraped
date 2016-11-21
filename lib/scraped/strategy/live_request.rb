@@ -1,6 +1,6 @@
 require 'open-uri'
 
-class ScrapedPage
+class Scraped
   module Strategy
     class LiveRequest
       def response(url)
