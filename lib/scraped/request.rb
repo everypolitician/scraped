@@ -21,7 +21,8 @@ class Scraped
 
     def first_successful_response
       @first_successful_response ||=
-        readers.lazy.map { |r, c| r.new(url: url, config: c).response }.reject(&:nil?).first
+        readers.lazy.map { |r, c| r.new(url: url, config: c).response }
+               .reject(&:nil?).first
     end
 
     attr_reader :url, :readers
