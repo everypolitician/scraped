@@ -3,9 +3,9 @@ require 'scraped/response'
 
 class Scraped
   class Request
-    def initialize(url:, readers: [Strategy::LiveRequest])
+    def initialize(url:, strategies: [Strategy::LiveRequest])
       @url = url
-      @readers = readers
+      @strategies = strategies
     end
 
     def response(decorators: [])
@@ -23,12 +23,12 @@ class Scraped
 
     private
 
+    attr_reader :url, :strategies
+
     def first_successful_response
       @first_successful_response ||=
-        readers.lazy.map { |r, c| r.new(url: url, config: c).response }
-               .reject(&:nil?).first
+        strategies.lazy.map { |r| r.new(url: url, config: c).response }
+                  .reject(&:nil?).first
     end
-
-    attr_reader :url, :readers
   end
 end
