@@ -40,7 +40,7 @@ class ExamplePage < Scraped
 end
 ```
 
-Then you can create a new instance and pass in a url
+Then you can create a new instance and pass in a `Scraped::Response` instance.
 
 ```ruby
 page = ExamplePage.new(response: Scraped::Request.new(url: 'http://example.com').response)
@@ -57,7 +57,7 @@ page.to_h
 
 ## Extending
 
-There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper, for example you might want to make all the links on the page absolute rather than relative.
+There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper. For example you might want to make all the links on the page absolute rather than relative.
 
 ### Custom request strategies
 
@@ -77,7 +77,7 @@ class FileOnDiskRequest < Scraped::Request::Strategy
 end
 ```
 
-The `response` method should return a `Response` instance. You need to pass at least `url` and `body` parameters to the `Response` constructor, you can also pass `status` and `headers` parameters.
+The `response` method should return a `Response` instance. You need to pass at least `url` and `body` parameters to the `Response` constructor. You can also pass `status` and `headers` parameters.
 
 To use a custom request strategy pass it to `Scraped::Request`:
 
@@ -88,27 +88,27 @@ page = MyPersonPage.new(response: request.response)
 
 ### Decorated responses
 
-To manipulate the response before it is passed to the scraper create a class that subclasses `Scraped::Response::Decorator`:
+To manipulate the response before it is passed to the scraper create a class that subclasses `Scraped::Response::Decorator` and defines any of the following methods: `body`, `url`, `status`, `headers`.
 
 ```ruby
 class AbsoluteLinks < Scraped::Response::Decorator
   def body
-    doc = Nokogiri::HTML(response.body)
+    doc = Nokogiri::HTML(super)
     doc.css('a').each do |link|
-      link[:href] = URI.join(response.url, link[:href]).to_s
+      link[:href] = URI.join(url, link[:href]).to_s
     end
     doc.to_s
   end
 end
 ```
 
-As well as the `body` method you can also supply your own `url`, `status` and `headers` methods. You can access the original response instance via the `response` method, as with `response.body` and `response.url` above.
+As well as the `body` method you can also supply your own `url`, `status` and `headers` methods. You can access the current request body by calling `super` from your method. You can also call `url`, `headers` or `status` to access those properties of the current response.
 
 To use a response decorator you need to supply it to the `Request#response` method:
 
 ```ruby
 request = Scraped::Request.new(url: 'http://example.com')
-response = request.response([AbsoluteLinks])
+response = request.response(decorators: [AbsoluteLinks])
 ```
 
 ### Configurating requests and responses
