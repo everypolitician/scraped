@@ -27,8 +27,13 @@ class Scraped
 
     def first_successful_response
       @first_successful_response ||=
-        strategies.lazy.map { |r| r.new(url: url, config: c).response }
-                  .reject(&:nil?).first
+        strategies.lazy.map do |strategy_config|
+          unless strategy_config.respond_to?(:delete)
+            strategy_config = { strategy: strategy_config }
+          end
+          strategy_class = strategy_config.delete(:strategy)
+          strategy_class.new(url: url, config: strategy_config).response
+        end.reject(&:nil?).first
     end
   end
 end
