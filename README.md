@@ -111,7 +111,7 @@ request = Scraped::Request.new(url: 'http://example.com')
 response = request.response(decorators: [AbsoluteLinks])
 ```
 
-### Configurating requests and responses
+### Configuring requests and responses
 
 When passing an array of request strategies or response decorators you should always pass the class, rather than the instance. If you want to configure an instance you can pass in a two element array where the first element is the class and the second element is the config:
 
