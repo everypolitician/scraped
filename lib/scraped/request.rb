@@ -16,7 +16,8 @@ class Scraped
           decorator_config = { decorator: decorator_config }
         end
         decorator_class = decorator_config.delete(:decorator)
-        decorator_class.new(response: r, config: decorator_config).decorated_response
+        decorator_class.new(response: r, config: decorator_config)
+                       .decorated_response
       end
     end
 
