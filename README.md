@@ -20,7 +20,8 @@ Or install it yourself as:
 
 ## Usage
 
-Create a subclass of `Scraped` for each _type_ of page you wish to scrape.
+To write a standard HTML scraper, start by creating a subclass of
+`Scraped::HTML` for each _type_ of page you wish to scrape.
 
 For example if you were scraping a list of people you might have a
 `PeopleListPage` class for the list page and a `PersonPage` class for an
@@ -29,7 +30,7 @@ individual person's page.
 ```ruby
 require 'scraped'
 
-class ExamplePage < Scraped
+class ExamplePage < Scraped::HTML
   field :title do
     noko.at_css('h1').text
   end
