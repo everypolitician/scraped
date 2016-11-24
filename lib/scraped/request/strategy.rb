@@ -3,9 +3,9 @@ class Scraped
     class Strategy
       class NotImplementedError < StandardError; end
 
-      def initialize(url:, config:)
+      def initialize(url:, config: {})
         @url = url
-        @config = config
+        @config = config.to_h
       end
 
       def response
