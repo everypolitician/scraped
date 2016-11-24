@@ -40,10 +40,10 @@ class ExamplePage < Scraped
 end
 ```
 
-Then you can create a new instance and pass in a url
+Then you can create a new instance and pass in a `Scraped::Response` instance.
 
 ```ruby
-page = ExamplePage.new(url: 'http://example.com')
+page = ExamplePage.new(response: Scraped::Request.new(url: 'http://example.com').response)
 
 page.title
 # => "Example Domain"
@@ -55,38 +55,79 @@ page.to_h
 # => { :title => "Example Domain", :more_information => "http://www.iana.org/domains/reserved" }
 ```
 
-## Archiving scraped pages
+## Extending
 
-The default strategy for retrieving pages is `Scraped::Strategy::LiveRequest`. If you'd also like to archive a copy of the page you're scraping into a git branch, you can pass a `:strategy` option to the constructor:
+There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper. For example you might want to make all the links on the page absolute rather than relative.
 
-```ruby
-ExamplePage.new(url: 'http://example.com', strategy: Scraped::Strategy::LiveRequestArchive.new)
-```
+### Custom request strategies
 
-This will use the [`scraped_page_archive`](https://github.com/everypolitician/scraped_page_archive)
-gem to store a copy of the pages you scrape in a git branch in your scraper's repo.
-
-## Custom strategies
-
-If for some reason you can't scrape a site using one of the built in strategies
-then you can provide your own strategy.
-
-A strategy is an object that implements a `response` method which returns a
-`Hash` with at least a `:body` key and optionally `:status` and `:headers` keys.
+To make a custom request you'll need to create a class that subclasses `Scraped::Request::Strategy` and defines a `response` method.
 
 ```ruby
-class FilesystemStrategy
-  def response(url)
-    { body: File.read(Digest::SHA1.hexdigest(url) + '.html') }
+class FileOnDiskRequest < Scraped::Request::Strategy
+  def response
+    Response.new(url: url, body: open(filename).read)
+  end
+
+  private
+
+  def filename
+    @filename ||= File.join(URI.parse(url).host, Digest::SHA1.hexdigest(url))
   end
 end
 ```
 
-Then you can pass that strategy when creating an instance of your `Scraped` subclass:
+The `response` method should return a `Response` instance. You need to pass at least `url` and `body` parameters to the `Response` constructor. You can also pass `status` and `headers` parameters.
+
+To use a custom request strategy pass it to `Scraped::Request`:
 
 ```ruby
-ExamplePage.new(url: 'http://example.com', strategy: FilesystemStrategy.new)
+request = Scraped::Request.new(url: 'http://example.com', strategies: [FileOnDiskRequest, Scraped::Request::Strategy::LiveRequest])
+page = MyPersonPage.new(response: request.response)
 ```
+
+### Decorated responses
+
+To manipulate the response before it is passed to the scraper create a class that subclasses `Scraped::Response::Decorator` and defines any of the following methods: `body`, `url`, `status`, `headers`.
+
+```ruby
+class AbsoluteLinks < Scraped::Response::Decorator
+  def body
+    doc = Nokogiri::HTML(super)
+    doc.css('a').each do |link|
+      link[:href] = URI.join(url, link[:href]).to_s
+    end
+    doc.to_s
+  end
+end
+```
+
+As well as the `body` method you can also supply your own `url`, `status` and `headers` methods. You can access the current request body by calling `super` from your method. You can also call `url`, `headers` or `status` to access those properties of the current response.
+
+To use a response decorator you need to supply it to the `Request#response` method:
+
+```ruby
+request = Scraped::Request.new(url: 'http://example.com')
+response = request.response(decorators: [AbsoluteLinks])
+```
+
+### Configuring requests and responses
+
+When passing an array of request strategies or response decorators you should always pass the class, rather than the instance. If you want to configure an instance you can pass in a two element array where the first element is the class and the second element is the config:
+
+```ruby
+class CustomHeader < Scraped::Response::Decorator
+  def headers
+    response.headers.merge('X-Greeting' => config[:greeting])
+  end
+end
+
+response = Scraped::Request.new(url: url).response([
+  { decorator: CustomHeader, greeting: 'Hello, world' }
+])
+```
+
+With the above code a custom header would be added to the response: `X-Greeting: Hello, world`.
 
 ## Development
 

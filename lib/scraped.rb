@@ -1,29 +1,26 @@
 # frozen_string_literal: true
-require 'scraped/version'
-require 'scraped/strategy/live_request'
-require 'scraped/strategy/live_request_archive'
-require 'scraped/response'
 require 'nokogiri'
 require 'field_serializer'
+require 'require_all'
+require_rel 'scraped'
 
 # Abstract class which scrapers can extend to implement their functionality.
 class Scraped
   include FieldSerializer
 
-  def initialize(url:, strategy: Strategy::LiveRequest.new)
-    @url = url
-    @strategy = strategy
+  def initialize(response:)
+    @response = response
   end
 
   private
 
-  attr_reader :url, :strategy
+  attr_reader :response
+
+  def url
+    response.url
+  end
 
   def noko
     @noko ||= Nokogiri::HTML(response.body)
-  end
-
-  def response
-    @response ||= Response.new(strategy.response(url))
   end
 end
