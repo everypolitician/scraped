@@ -123,7 +123,7 @@ class CustomHeader < Scraped::Response::Decorator
 end
 
 response = Scraped::Request.new(url: url).response([
-  [CustomHeader, greeting: 'Hello, world']
+  { decorator: CustomHeader, greeting: 'Hello, world' }
 ])
 ```
 
