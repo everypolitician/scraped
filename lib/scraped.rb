@@ -19,8 +19,4 @@ class Scraped
   def url
     response.url
   end
-
-  def noko
-    @noko ||= Nokogiri::HTML(response.body)
-  end
 end
