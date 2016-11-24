@@ -15,8 +15,10 @@ describe Scraped::HTML do
       end
     end
 
+    let(:page) { ExamplePage.new(response: response) }
+
     it 'returns the expected content' do
-      ExamplePage.new(response: response).content.must_equal 'Hi there!'
+      page.content.must_equal 'Hi there!'
     end
 
     describe 'with a custom noko instance' do
