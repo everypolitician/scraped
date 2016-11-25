@@ -69,19 +69,19 @@ with the one you specify.
 ```ruby
 class MemberRow < Scraped::HTML
   field :name do
-    noko.css('td.full-name')
+    noko.css('td')[2].text
   end
-end
 
-class MembersTable < Scraped::HTML
-  field :members do
-    noko.css('tr').map { |row| MemberRow.new(response: response, noko: row) }
+  field :party do
+    noko.css('td')[3].text
   end
 end
 
 class AllMembersPage < Scraped::HTML
-  field :members_term_10_table do
-    MembersTable.new(response: response, noko: noko.css('table.members-list-term-10')
+  field :members do
+    noko.css('table.members-list tr').map do |row|
+      MemberRow.new(response: response, noko: row)
+    end
   end
 end
 ```
