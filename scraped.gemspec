@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'nokogiri'
   spec.add_runtime_dependency 'field_serializer'
-  spec.add_runtime_dependency 'scraped_page_archive', '>= 0.5'
   spec.add_runtime_dependency 'require_all'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
