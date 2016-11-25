@@ -56,6 +56,36 @@ page.to_h
 # => { :title => "Example Domain", :more_information => "http://www.iana.org/domains/reserved" }
 ```
 
+### Dealing with sections of a page
+
+When writing an HTML scraper you'll often need to deal with just a part of the page.
+For example you might want to scrape a table containing a list of people and some
+associated data.
+
+To do this you can pass a `noko` keyword argument to a `Scraped::HTML` subclass
+constructor. This will then replace the `noko` Nokogiri instance in the scraper
+with the one you specify.
+
+```ruby
+class MemberRow < Scraped::HTML
+  field :name do
+    noko.css('td')[2].text
+  end
+
+  field :party do
+    noko.css('td')[3].text
+  end
+end
+
+class AllMembersPage < Scraped::HTML
+  field :members do
+    noko.css('table.members-list tr').map do |row|
+      MemberRow.new(response: response, noko: row)
+    end
+  end
+end
+```
+
 ## Extending
 
 There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper. For example you might want to make all the links on the page absolute rather than relative.
