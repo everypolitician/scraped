@@ -8,12 +8,16 @@ require_rel 'scraped'
 class Scraped
   include FieldSerializer
 
-  def self.decorators(decorators = nil)
-    @decorators ||= decorators
+  def self.decorator(klass, config = {})
+    decorators << config.merge(decorator: klass)
+  end
+
+  def self.decorators
+    @decorators ||= []
   end
 
   def self.inherited(klass)
-    klass.decorators(decorators)
+    klass.decorators.concat(decorators)
   end
 
   def initialize(response:)

@@ -16,6 +16,12 @@ describe Scraped do
       end
     end
 
+    class FindReplaceDecorator < Scraped::Response::Decorator
+      def body
+        super.gsub(config[:find], config[:replace])
+      end
+    end
+
     class PageNoDecorators < Scraped
       field :body do
         response.body.to_s
@@ -23,7 +29,11 @@ describe Scraped do
     end
 
     class PageWithDecorators < PageNoDecorators
-      decorators [UpcaseDecorator]
+      decorator UpcaseDecorator
+    end
+
+    class PageWithConfigurableDecorators < PageNoDecorators
+      decorator FindReplaceDecorator, find: 'Hello', replace: 'Hi!'
     end
 
     it 'does not change the response with no decorators' do
@@ -32,6 +42,12 @@ describe Scraped do
 
     it 'changes the body with decorator' do
       PageWithDecorators.new(response: response).body.must_equal 'HELLO'
+    end
+
+    it 'allows configuring decorators' do
+      PageWithConfigurableDecorators.new(
+        response: response
+      ).body.must_equal 'Hi!'
     end
   end
 end
