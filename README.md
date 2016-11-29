@@ -135,11 +135,11 @@ end
 
 As well as the `body` method you can also supply your own `url`, `status` and `headers` methods. You can access the current request body by calling `super` from your method. You can also call `url`, `headers` or `status` to access those properties of the current response.
 
-To use a response decorator you need to use the `decorators` class method in a `Scraped::HTML` subclass:
+To use a response decorator you need to use the `decorator` class method in a `Scraped::HTML` subclass:
 
 ```ruby
 class PageWithRelativeLinks < Scraped::HTML
-  decorators [AbsoluteLinks]
+  decorator AbsoluteLinks
 
   # Other fields...
 end
@@ -157,7 +157,7 @@ class CustomHeader < Scraped::Response::Decorator
 end
 
 class ExamplePage < Scraped::HTML
-  decorators [{ decorator: CustomHeader, greeting: 'Hello, world' }]
+  decorator CustomHeader, greeting: 'Hello, world'
 end
 ```
 
