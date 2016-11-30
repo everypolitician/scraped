@@ -7,10 +7,10 @@ class Scraped
 
     def response
       decorators.reduce(original_response) do |r, decorator_config|
-        unless decorator_config.respond_to?(:delete)
+        unless decorator_config.respond_to?(:[])
           decorator_config = { decorator: decorator_config }
         end
-        decorator_class = decorator_config.delete(:decorator)
+        decorator_class = decorator_config[:decorator]
         decorator_class.new(response: r, config: decorator_config)
                        .decorated_response
       end
