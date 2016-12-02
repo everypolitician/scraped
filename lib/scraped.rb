@@ -18,6 +18,7 @@ class Scraped
 
   def self.inherited(klass)
     klass.decorators.concat(decorators)
+    super
   end
 
   def initialize(response:)
