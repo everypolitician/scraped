@@ -163,6 +163,10 @@ end
 
 With the above code a custom header would be added to the response: `X-Greeting: Hello, world`.
 
+#### Inheritance with decorators
+
+When you inherit from a class that already has decorators the child class will also inherit the parent's decorators. There's currently no way to re-order or remove decorators in child classes, though that _may_ be added in the future.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
