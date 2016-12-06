@@ -41,6 +41,9 @@ describe Scraped do
       decorator UpcaseDecorator
     end
 
+    class PageInheritingDecorators < PageWithDecorators
+    end
+
     it 'does not change the response with no decorators' do
       PageNoDecorators.new(response: response).body.must_equal 'Hello'
     end
@@ -59,6 +62,12 @@ describe Scraped do
       PageWithMultipleDecorators.new(
         response: response
       ).body.must_equal 'HI!'
+    end
+
+    it 'works with inheritance' do
+      PageInheritingDecorators.new(
+        response: response
+      ).body.must_equal 'HELLO'
     end
   end
 end
