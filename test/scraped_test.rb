@@ -36,6 +36,11 @@ describe Scraped do
       decorator FindReplaceDecorator, find: 'Hello', replace: 'Hi!'
     end
 
+    class PageWithMultipleDecorators < PageNoDecorators
+      decorator FindReplaceDecorator, find: 'Hello', replace: 'Hi!'
+      decorator UpcaseDecorator
+    end
+
     it 'does not change the response with no decorators' do
       PageNoDecorators.new(response: response).body.must_equal 'Hello'
     end
@@ -48,6 +53,12 @@ describe Scraped do
       PageWithConfigurableDecorators.new(
         response: response
       ).body.must_equal 'Hi!'
+    end
+
+    it 'works with multiple decorators' do
+      PageWithMultipleDecorators.new(
+        response: response
+      ).body.must_equal 'HI!'
     end
   end
 end
