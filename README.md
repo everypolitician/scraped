@@ -97,7 +97,7 @@ To make a custom request you'll need to create a class that subclasses `Scraped:
 ```ruby
 class FileOnDiskRequest < Scraped::Request::Strategy
   def response
-    Response.new(url: url, body: open(filename).read)
+    { body: open(filename).read }
   end
 
   private
@@ -108,7 +108,7 @@ class FileOnDiskRequest < Scraped::Request::Strategy
 end
 ```
 
-The `response` method should return a `Response` instance. You need to pass at least `url` and `body` parameters to the `Response` constructor. You can also pass `status` and `headers` parameters.
+The `response` method should return a `Hash` which has at least a `body` key. You can also include `status` and `headers` parameters in the hash to fill out those fields in the response. If not given status will default to `200` and headers will default to `{}`.
 
 To use a custom request strategy pass it to `Scraped::Request`:
 
