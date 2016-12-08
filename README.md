@@ -108,7 +108,7 @@ class FileOnDiskRequest < Scraped::Request::Strategy
 end
 ```
 
-The `response` method should return a `Hash` which has at least a `body` key. You can also include `status` and `headers` parameters in the hash to fill out those fields in the response. If not given status will default to `200` and headers will default to `{}`.
+The `response` method should return a `Hash` which has at least a `body` key. You can also include `status` and `headers` parameters in the hash to fill out those fields in the response. If not given, status will default to `200` and headers will default to `{}`.
 
 To use a custom request strategy pass it to `Scraped::Request`:
 
