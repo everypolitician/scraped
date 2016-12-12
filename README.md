@@ -119,7 +119,7 @@ page = MyPersonPage.new(response: request.response)
 
 ### Decorated responses
 
-To manipulate the response before it is passed to the scraper create a class that subclasses `Scraped::Response::Decorator` and defines any of the following methods: `body`, `url`, `status`, `headers`.
+To manipulate the response before it is processed by the scraper create a class that subclasses `Scraped::Response::Decorator` and defines any of the following methods: `body`, `url`, `status`, `headers`.
 
 ```ruby
 class AbsoluteLinks < Scraped::Response::Decorator
@@ -135,11 +135,14 @@ end
 
 As well as the `body` method you can also supply your own `url`, `status` and `headers` methods. You can access the current request body by calling `super` from your method. You can also call `url`, `headers` or `status` to access those properties of the current response.
 
-To use a response decorator you need to supply it to the `Request#response` method:
+To use a response decorator you need to use the `decorator` class method in a `Scraped::HTML` subclass:
 
 ```ruby
-request = Scraped::Request.new(url: 'http://example.com')
-response = request.response(decorators: [AbsoluteLinks])
+class PageWithRelativeLinks < Scraped::HTML
+  decorator AbsoluteLinks
+
+  # Other fields...
+end
 ```
 
 ### Configuring requests and responses
@@ -153,12 +156,16 @@ class CustomHeader < Scraped::Response::Decorator
   end
 end
 
-response = Scraped::Request.new(url: url).response(decorators: [
-  { decorator: CustomHeader, greeting: 'Hello, world' }
-])
+class ExamplePage < Scraped::HTML
+  decorator CustomHeader, greeting: 'Hello, world'
+end
 ```
 
 With the above code a custom header would be added to the response: `X-Greeting: Hello, world`.
+
+#### Inheritance with decorators
+
+When you inherit from a class that already has decorators the child class will also inherit the parent's decorators. There's currently no way to re-order or remove decorators in child classes, though that _may_ be added in the future.
 
 ## Development
 

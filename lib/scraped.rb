@@ -8,13 +8,33 @@ require_rel 'scraped'
 class Scraped
   include FieldSerializer
 
+  def self.decorator(klass, config = {})
+    decorators << config.merge(decorator: klass)
+  end
+
+  def self.decorators
+    @decorators ||= []
+  end
+
+  def self.inherited(klass)
+    klass.decorators.concat(decorators)
+    super
+  end
+
   def initialize(response:)
-    @response = response
+    @original_response = response
   end
 
   private
 
-  attr_reader :response
+  attr_reader :original_response
+
+  def response
+    @response ||= ResponseDecorator.new(
+      response:   original_response,
+      decorators: self.class.decorators
+    ).response
+  end
 
   def url
     response.url
