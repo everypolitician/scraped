@@ -7,9 +7,15 @@ class Scraped
       class AbsoluteUrls < Decorator
         def body
           Nokogiri::HTML(super).tap do |doc|
-            doc.css('img').each { |img| img[:src] = URI.join(url, img[:src]) }
-            doc.css('a').each { |a| a[:href] = URI.join(url, a[:href]) }
+            doc.css('img').each { |img| img[:src] = absolute_url(img[:src]) }
+            doc.css('a').each { |a| a[:href] = absolute_url(a[:href]) }
           end.to_s
+        end
+
+        private
+
+        def absolute_url(relative_url)
+          URI.join(url, relative_url) unless relative_url.to_s.empty?
         end
       end
     end

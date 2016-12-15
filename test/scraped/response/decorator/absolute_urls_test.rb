@@ -6,10 +6,12 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     <img class="relative-image" src="/person-123.jpg">
     <img class="absolute-image" src="http://example.com/person-123-square.jpg">
     <img class="external-image" src="http://example.org/person-123-alternative.jpg">
+    <img class="empty-image" src="">
 
     <a class="relative-link" href="/person-123">Person 123</a>
     <a class="absolute-link" href="http://example.com/person-123-contact">Person 123</a>
     <a class="external-link" href="http://example.org/person-123-other-page">Person 123</a>
+    <a class="empty-link" href="">Person 123</a>
     BODY
   end
 
@@ -34,6 +36,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
       img('.external-image')
     end
 
+    field :empty_image do
+      img('.empty-image')
+    end
+
     field :relative_link do
       link('.relative-link')
     end
@@ -44,6 +50,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
 
     field :external_link do
       link('.external-link')
+    end
+
+    field :empty_link do
+      link('.empty-link')
     end
 
     private
@@ -69,6 +79,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     page.external_image.must_equal 'http://example.org/person-123-alternative.jpg'
   end
 
+  it 'leaves empty image src attributes alone' do
+    page.empty_image.must_equal ''
+  end
+
   it 'makes relative links absolute' do
     page.relative_link.must_equal 'http://example.com/person-123'
   end
@@ -79,5 +93,9 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
 
   it 'leaves external links alone' do
     page.external_link.must_equal 'http://example.org/person-123-other-page'
+  end
+
+  it 'leaves empty link href attributes alone' do
+    page.empty_link.must_equal ''
   end
 end
