@@ -88,7 +88,7 @@ end
 
 ## Extending
 
-There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper. For example you might want to make all the links on the page absolute rather than relative.
+There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper. Scraped comes with some [built in decorators](#built-in-decorators) for common tasks such as making all the link urls on the page absolute rather than relative.
 
 ### Custom request strategies
 
@@ -166,6 +166,28 @@ With the above code a custom header would be added to the response: `X-Greeting:
 #### Inheritance with decorators
 
 When you inherit from a class that already has decorators the child class will also inherit the parent's decorators. There's currently no way to re-order or remove decorators in child classes, though that _may_ be added in the future.
+
+### Built in decorators
+
+#### Absolute link and image urls
+
+Very frequently you will find that you need to make links and images on the page
+you are scraping absolute rather than relative. Scraped comes with support for
+this out of the box via the `Scraped::Response::Decorator::AbsoluteUrls`
+decorator.
+
+```ruby
+require 'scraped'
+
+class MemberPage < Scraped::HTML
+  decorator Scraped::Response::Decorator::AbsoluteUrls
+
+  field :image do
+    # Image url will be absolute thanks to the decorator.
+    noko.at_css('.profile-picture/@src').text
+  end
+end
+```
 
 ## Development
 
