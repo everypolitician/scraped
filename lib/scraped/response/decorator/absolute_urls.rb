@@ -16,6 +16,8 @@ class Scraped
 
         def absolute_url(relative_url)
           URI.join(url, relative_url) unless relative_url.to_s.empty?
+        rescue URI::InvalidURIError
+          relative_url
         end
       end
     end
