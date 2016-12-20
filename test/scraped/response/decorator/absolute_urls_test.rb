@@ -12,6 +12,7 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     <a class="absolute-link" href="http://example.com/person-123-contact">Person 123</a>
     <a class="external-link" href="http://example.org/person-123-other-page">Person 123</a>
     <a class="empty-link" href="">Person 123</a>
+    <a class="javascript-link" href="javascript:chooseStyle('small',60);">Person 123</a>
     BODY
   end
 
@@ -56,6 +57,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
       link('.empty-link')
     end
 
+    field :javascript_link do
+      link('.javascript-link')
+    end
+
     private
 
     def img(selector)
@@ -93,6 +98,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
 
   it 'leaves external links alone' do
     page.external_link.must_equal 'http://example.org/person-123-other-page'
+  end
+
+  it "doesn't raise an exception for javascript links" do
+    page.javascript_link.must_equal "javascript:chooseStyle('small',60);"
   end
 
   it 'leaves empty link href attributes alone' do
