@@ -62,9 +62,9 @@ When writing an HTML scraper you'll often need to deal with just a part of the p
 For example you might want to scrape a table containing a list of people and some
 associated data.
 
-To do this you can pass a `noko` keyword argument to a `Scraped::HTML` subclass
-constructor. This will then replace the `noko` Nokogiri instance in the scraper
-with the one you specify.
+To do this you can use the `fragment` method, passing it a hash with one entry
+where the key is the `noko` fragment you want to use and the value is the class
+that should handle that fragment.
 
 ```ruby
 class MemberRow < Scraped::HTML
@@ -80,7 +80,7 @@ end
 class AllMembersPage < Scraped::HTML
   field :members do
     noko.css('table.members-list tr').map do |row|
-      MemberRow.new(response: response, noko: row)
+      fragment row => MemberRow
     end
   end
 end

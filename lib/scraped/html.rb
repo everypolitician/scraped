@@ -10,5 +10,10 @@ class Scraped
     def noko
       @noko ||= Nokogiri::HTML(response.body)
     end
+
+    def fragment(mapping)
+      noko_fragment, klass = mapping.to_a.first
+      klass.new(noko: noko_fragment, response: response)
+    end
   end
 end
