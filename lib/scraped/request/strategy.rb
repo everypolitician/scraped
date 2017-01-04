@@ -1,4 +1,4 @@
-class Scraped
+module Scraped
   class Request
     class Strategy
       class NotImplementedError < StandardError; end

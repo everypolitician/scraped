@@ -1,7 +1,7 @@
 require 'scraped/request/strategy'
 require 'open-uri'
 
-class Scraped
+module Scraped
   class Request
     class Strategy
       class LiveRequest < Strategy

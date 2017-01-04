@@ -1,4 +1,4 @@
-class Scraped
+module Scraped
   class Response
     attr_reader :status, :headers, :body, :url
 

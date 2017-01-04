@@ -1,4 +1,4 @@
-class Scraped
+module Scraped
   class ResponseDecorator
     def initialize(response:, decorators:)
       @original_response = response
