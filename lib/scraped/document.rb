@@ -4,7 +4,7 @@ require 'field_serializer'
 
 module Scraped
   # Abstract class which scrapers can extend to implement their functionality.
-  class Base
+  class Document
     include FieldSerializer
 
     def self.decorator(klass, config = {})

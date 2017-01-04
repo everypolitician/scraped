@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- The logic that was in the `Scraped` class is now in `Scraped::Base`.
-- `Scraped::HTML` now inherits from `Scraped::Base` rather than `Scraped`.
+- The logic that was in the `Scraped` class is now in `Scraped::Document`.
+- `Scraped::HTML` now inherits from `Scraped::Document` rather than `Scraped`.
 - The top level `Scraped` constant is now a `module` instead of a `class`.
 
 ## 0.1.0 - 2017-01-04
