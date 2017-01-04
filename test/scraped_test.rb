@@ -22,7 +22,7 @@ describe Scraped do
       end
     end
 
-    class PageNoDecorators < Scraped
+    class PageNoDecorators < Scraped::Base
       field :body do
         response.body.to_s
       end

@@ -1,5 +1,5 @@
 class Scraped
-  class HTML < Scraped
+  class HTML < Scraped::Base
     private
 
     def initialize(noko: nil, **args)
