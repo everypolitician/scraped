@@ -2,7 +2,7 @@
 require 'nokogiri'
 require 'field_serializer'
 
-class Scraped
+module Scraped
   # Abstract class which scrapers can extend to implement their functionality.
   class Base
     include FieldSerializer

@@ -1,4 +1,4 @@
-class Scraped
+module Scraped
   class HTML < Scraped::Base
     private
 

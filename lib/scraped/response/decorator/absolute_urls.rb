@@ -1,7 +1,7 @@
 require 'nokogiri'
 require 'uri'
 
-class Scraped
+module Scraped
   class Response
     class Decorator
       class AbsoluteUrls < Decorator

@@ -1,7 +1,7 @@
 require 'scraped/request/strategy/live_request'
 require 'scraped/response'
 
-class Scraped
+module Scraped
   class Request
     def initialize(url:, strategies: [Strategy::LiveRequest])
       @url = url
