@@ -1,6 +1,39 @@
 # Scraped
 
-Write declarative scrapers in Ruby
+Scraped: write declarative webscrapers in Ruby.
+
+Scraped is a gem that knows you want to hit a page to extract data — typically repetively — as fields, ready to drop into a database. Tell Scraped where and how (simplest: at URL) to find the page or pages, make a class for each  different types of thing it needs to find, and, for each of those, the fields you want it to extract.
+
+We (the EveryPolitician team) need to scrape a _lot_ of websites, extracting politicians' data from them. The Scraped gem is how we manage to stay on top
+of hundreds of scrapers. [Read more](FIXME).
+
+## Usage in a nutshell
+
+Tell Scraped...
+
+* the classes for pages (or sections) you want
+** the fields you want, expressed as noko expressions (CSS of XPATH)
+* the *strategy* for recovering them
+** maybe it's just open-uri to a URL?
+** or perhaps you also want to archive as you go?
+** or be fancy and read from the archive, pulling from upstream if the site's available
+* *decorate* what comes back before using it: for example, maybe you need to:
+** make relative URLs absolute
+** unspan HTML tables (flatten out the colspans or rowspans)
+** normalise whitespace (nobody likes &nbsp; in their data)
+
+Scraped hits the page or pages and returns them as object of the classes you want, ready to use. This plays very nicely with morph.io; or simply run it locally and write your own CSV or into your favourite database.
+
+We have examples of this in action: try [here](FIXME) or [here](FIXME) or [here](FIXME).
+
+## Simple example:
+
+```ruby
+FIXME
+FIXME
+FIXME
+FIXME
+````
 
 ## Installation
 
