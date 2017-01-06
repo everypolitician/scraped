@@ -21,7 +21,8 @@ module Scraped
               URI.decode(relative_url)
             ).gsub('[', '%5B').gsub(']', '%5D')).to_s
           end
-        rescue URI::InvalidURIError
+        rescue URI::InvalidURIError => e
+          warn "[#{self.class}] Could not make #{relative_url.inspect} absolute: #{e.message}" if ENV['VERBOSE']
           relative_url
         end
       end
