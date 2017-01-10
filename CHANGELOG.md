@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.0 - 2017-01-10
+
+### Changed
+
+- The AbsoluteUrls decorator now ensures the URL is correctly encoded
+  (e.g. by transforming spaces into %20)
+
 ## 0.2.0 - 2017-01-04
 
 ### Changed

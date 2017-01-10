@@ -15,7 +15,12 @@ module Scraped
         private
 
         def absolute_url(relative_url)
-          URI.join(url, relative_url) unless relative_url.to_s.empty?
+          unless relative_url.to_s.empty?
+            URI.join(url, URI.encode(
+              # To prevent encoded URLs from being encoded twice
+              URI.decode(relative_url)
+            ).gsub('[', '%5B').gsub(']', '%5D')).to_s
+          end
         rescue URI::InvalidURIError
           relative_url
         end

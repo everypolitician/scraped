@@ -13,6 +13,9 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     <a class="external-link" href="http://example.org/person-123-other-page">Person 123</a>
     <a class="empty-link" href="">Person 123</a>
     <a class="javascript-link" href="javascript:chooseStyle('small',60);">Person 123</a>
+    <a class="bracketed-link" href="/person[123]">Person 123</a>
+    <a class="relative-link-with-unencoded-space" href="/person 123">Person 123</a>
+    <a class="encoded-url" href="/person%20123">Person 123</a>
     BODY
   end
 
@@ -61,6 +64,18 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
       link('.javascript-link')
     end
 
+    field :bracketed_link do
+      link('.bracketed-link')
+    end
+
+    field :relative_link_with_unencoded_space do
+      link('.relative-link-with-unencoded-space')
+    end
+
+    field :encoded_url do
+      link('.encoded-url')
+    end
+
     private
 
     def img(selector)
@@ -106,5 +121,17 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
 
   it 'leaves empty link href attributes alone' do
     page.empty_link.must_equal ''
+  end
+
+  it 'handles square brackets' do
+    page.bracketed_link.must_equal 'http://example.com/person%5B123%5D'
+  end
+
+  it 'encodes space characters' do
+    page.relative_link_with_unencoded_space.must_equal 'http://example.com/person%20123'
+  end
+
+  it 'should not encode already encoded URLs' do
+    page.encoded_url.must_equal 'http://example.com/person%20123'
   end
 end
