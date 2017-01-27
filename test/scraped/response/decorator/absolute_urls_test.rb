@@ -19,7 +19,7 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     BODY
   end
 
-  let (:body_with_base) do
+  let :body_with_base do
     <<-BODY
     <base href="http://www.example.com/" />
     <a class="relative-link" href="/person-123">Person 123</a>
@@ -30,12 +30,14 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     Scraped::Response.new(url: 'http://example.com', body: body)
   end
 
-  let(:body_with_base_response) do
-    Scraped::Response.new(url: 'http://example.com', body: body)
+  let :body_with_base_response do
+    Scraped::Response.new(url: 'http://example.com', body: body_with_base)
   end
 
   let(:page) { PageWithAbsoluteUrlsDecorator.new(response: response) }
-  let(:page_with_base) { PageWithAbsoluteUrlsDecorator.new(response: response) }
+  let :page_with_base do
+    PageWithAbsoluteUrlsDecorator.new(response: body_with_base_response)
+  end
 
   class PageWithAbsoluteUrlsDecorator < Scraped::HTML
     decorator Scraped::Response::Decorator::AbsoluteUrls
