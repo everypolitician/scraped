@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0 - 2017-01-27
+
+### Changed
+
+- The AbsoluteUrls decorator uses the base URL provided by the document. If one is not provided, it uses the document URL.
+
 ## 0.3.0 - 2017-01-10
 
 ### Changed
