@@ -13,3 +13,4 @@ Metrics/BlockLength:
   Max: 10
   Exclude:
     - './scraped.gemspec'
+    - 'test/**/*'
