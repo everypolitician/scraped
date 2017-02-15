@@ -31,6 +31,7 @@ done
 if bundle exec rake test
 then
     echo "Your newly introduced tests should have failed on $TARGET_BRANCH"
+    echo "If you expected them to pass then include 'refactor' in the branch name"
     exit 1
 else
     echo "Your new tests failed on $TARGET_BRANCH, which is a good thing!"
