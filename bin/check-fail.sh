@@ -1,38 +1,38 @@
-#!/bin/sh
+#!/bin/bash
+#
+# Checks tests introduced in pull requests fail on master.
 
-set -e
+set -eo pipefail
 
-if [ "$TRAVIS_PULL_REQUEST" = false ]
-then
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
   echo "Skipping $0 for non-PR build"
   exit 0
 fi
 
-TARGET_BRANCH="$TRAVIS_BRANCH"
-if echo "$TRAVIS_PULL_REQUEST_BRANCH" | grep -qi refactor
-then
-    echo "The title of the PR indicates this is a refactoring; skipping this check"
-    exit 0
+if echo "${TRAVIS_PULL_REQUEST_BRANCH}" | grep -qi refactor; then
+  echo "The title of the PR indicates this is a refactoring; skipping this check"
+  exit 0
 fi
 
-if [ x"$TARGET_BRANCH" = x ]
-then
-    echo "No target branch found"
-    exit 1
+target_branch="${TRAVIS_BRANCH}"
+
+if [ -z "${target_branch}" ]; then
+  echo "No target branch found" >&2
+  exit 1
 fi
 
-git checkout "$TARGET_BRANCH"
+# Checkout the branch that the pull request is targeting...
+git checkout "${target_branch}"
 
-for d in t tests test spec
-do
-    git checkout HEAD@{1} -- $d 2> /dev/null || true
+# ...but revert the test code back to the pull request version
+for dir in t tests test spec; do
+  git checkout "HEAD@{1}" -- "${dir}" 2> /dev/null || true
 done
 
-if bundle exec rake test
-then
-    echo "Your newly introduced tests should have failed on $TARGET_BRANCH"
-    echo "If you expected them to pass then include 'refactor' in the branch name"
-    exit 1
+if bundle exec rake test; then
+  echo "Your newly introduced tests should have failed on ${target_branch}" >&2
+  echo "If you expected them to pass then include 'refactor' in the branch name" >&2
+  exit 1
 else
-    echo "Your new tests failed on $TARGET_BRANCH, which is a good thing!"
+  echo "Your new tests failed on ${target_branch}, which is a good thing!"
 fi
