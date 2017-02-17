@@ -19,11 +19,25 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     BODY
   end
 
+  let :body_with_base do
+    <<-BODY
+    <base href="http://www.example.com/" />
+    <a class="relative-link" href="/person-123">Person 123</a>
+    BODY
+  end
+
   let(:response) do
     Scraped::Response.new(url: 'http://example.com', body: body)
   end
 
+  let :body_with_base_response do
+    Scraped::Response.new(url: 'http://example.com', body: body_with_base)
+  end
+
   let(:page) { PageWithAbsoluteUrlsDecorator.new(response: response) }
+  let :page_with_base do
+    PageWithAbsoluteUrlsDecorator.new(response: body_with_base_response)
+  end
 
   class PageWithAbsoluteUrlsDecorator < Scraped::HTML
     decorator Scraped::Response::Decorator::AbsoluteUrls
@@ -133,5 +147,9 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
 
   it 'should not encode already encoded URLs' do
     page.encoded_url.must_equal 'http://example.com/person%20123'
+  end
+
+  it 'should use a base url provided by the document' do
+    page_with_base.relative_link.must_equal 'http://www.example.com/person-123'
   end
 end
