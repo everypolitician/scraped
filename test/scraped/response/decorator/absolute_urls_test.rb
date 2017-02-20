@@ -16,6 +16,7 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     <a class="bracketed-link" href="/person[123]">Person 123</a>
     <a class="relative-link-with-unencoded-space" href="/person 123">Person 123</a>
     <a class="encoded-url" href="/person%20123">Person 123</a>
+    <a class="broken-mailto-link" href="mailto:notanemail">Person 123</a>
     BODY
   end
 
@@ -76,6 +77,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
       link('.encoded-url')
     end
 
+    field :broken_mailto_link do
+      link('.broken-mailto-link')
+    end
+
     private
 
     def img(selector)
@@ -133,5 +138,9 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
 
   it 'should not encode already encoded URLs' do
     page.encoded_url.must_equal 'http://example.com/person%20123'
+  end
+
+  it 'ignores invalid mailto links' do
+    page.broken_mailto_link.must_equal 'mailto:notanemail'
   end
 end
