@@ -4,7 +4,7 @@ require 'uri'
 module Scraped
   class Response
     class Decorator
-      class AbsoluteUrls < Decorator
+      class CleanUrls < Decorator
         class AbsoluteUrl
           def initialize(base_url:, relative_url:)
             @base_url = base_url

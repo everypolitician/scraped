@@ -1,6 +1,6 @@
 require 'test_helper'
 
-describe Scraped::Response::Decorator::AbsoluteUrls do
+describe Scraped::Response::Decorator::CleanUrls do
   let(:body) do
     <<-BODY
     <img class="relative-image" src="/person-123.jpg">
@@ -23,10 +23,10 @@ describe Scraped::Response::Decorator::AbsoluteUrls do
     Scraped::Response.new(url: 'http://example.com', body: body)
   end
 
-  let(:page) { PageWithAbsoluteUrlsDecorator.new(response: response) }
+  let(:page) { PageWithCleanUrlsDecorator.new(response: response) }
 
-  class PageWithAbsoluteUrlsDecorator < Scraped::HTML
-    decorator Scraped::Response::Decorator::AbsoluteUrls
+  class PageWithCleanUrlsDecorator < Scraped::HTML
+    decorator Scraped::Response::Decorator::CleanUrls
 
     field :relative_image do
       img('.relative-image')
