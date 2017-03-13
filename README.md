@@ -169,21 +169,18 @@ When you inherit from a class that already has decorators the child class will a
 
 ### Built in decorators
 
-#### Absolute link and image urls
+#### Clean link and image URLs
 
-Very frequently you will find that you need to make links and images on the page
-you are scraping absolute rather than relative. Scraped comes with support for
-this out of the box via the `Scraped::Response::Decorator::AbsoluteUrls`
-decorator.
+You will likely want to normalize link and image urls on the page you are scraping. `Scraped::Response::Decorator::CleanUrls` ensures that each link is absolute and does not contain any encoded characters.
 
-```ruby
+```
 require 'scraped'
 
 class MemberPage < Scraped::HTML
   decorator Scraped::Response::Decorator::AbsoluteUrls
 
   field :image do
-    # Image url will be absolute thanks to the decorator.
+    # Image url will be absolute and encoded correctly thanks to the decorator.
     noko.at_css('.profile-picture/@src').text
   end
 end
