@@ -173,7 +173,7 @@ When you inherit from a class that already has decorators the child class will a
 
 You will likely want to normalize link and image urls on the page you are scraping. `Scraped::Response::Decorator::CleanUrls` ensures that each link is absolute and does not contain any encoded characters.
 
-```
+```ruby
 require 'scraped'
 
 class MemberPage < Scraped::HTML
