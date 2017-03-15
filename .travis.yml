@@ -8,4 +8,4 @@ rvm:
 before_install: gem install bundler -v 1.13.5
 script:
   - bundle exec rake
-  - bin/check-fail.sh
+  - bash <(curl -fsSL https://github.com/everypolitician/ensure-regression-tests/raw/master/ensure-regression-tests)
