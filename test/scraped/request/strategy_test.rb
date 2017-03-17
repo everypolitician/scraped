@@ -33,4 +33,26 @@ describe Scraped::Request::Strategy do
       end.must_raise Scraped::Request::Strategy::NotImplementedError
     end
   end
+
+  describe 'passing request headers' do
+    class TestHeadersStrategy < Scraped::Request::Strategy
+      def response
+        { body: "Status: #{headers['X-Testing-Status']}" }
+      end
+    end
+
+    let(:response) do
+      TestHeadersStrategy.new(
+        url:     'http://example.com',
+        headers: {
+          'X-Testing-Status' => 'Test successful',
+        },
+        config:  { name: 'Alice' }
+      ).response
+    end
+
+    it 'makes the headers available to the strategy' do
+      response[:body].must_equal 'Status: Test successful'
+    end
+  end
 end
