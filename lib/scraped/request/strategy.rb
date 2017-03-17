@@ -3,8 +3,9 @@ module Scraped
     class Strategy
       class NotImplementedError < StandardError; end
 
-      def initialize(url:, config: {})
+      def initialize(url:, headers: {}, config: {})
         @url = url
+        @headers = headers
         @config = config.to_h
       end
 
@@ -14,7 +15,7 @@ module Scraped
 
       private
 
-      attr_reader :url, :config
+      attr_reader :url, :headers, :config
     end
   end
 end

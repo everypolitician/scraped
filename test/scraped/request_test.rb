@@ -64,6 +64,26 @@ describe Scraped::Request do
         response.body.must_equal 'Success'
       end
     end
+
+    describe 'with request headers' do
+      class StrategyUsingHeaders < Scraped::Request::Strategy
+        def response
+          { body: "Name: #{headers['X-Test-Name']}" }
+        end
+      end
+
+      let(:response) do
+        Scraped::Request.new(
+          url:        'http://example.com',
+          headers:    { 'X-Test-Name' => 'Alice' },
+          strategies: [StrategyUsingHeaders]
+        ).response
+      end
+
+      it 'includes the header in the response' do
+        response.body.must_equal 'Name: Alice'
+      end
+    end
   end
 
   describe 'decorators' do

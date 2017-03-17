@@ -86,6 +86,15 @@ class AllMembersPage < Scraped::HTML
 end
 ```
 
+### Passing request headers
+
+To set request headers you can pass a `headers:` argument to `Scraped::Request.new`:
+
+```ruby
+response = Scraped::Request.new(url: 'http://example.com', headers: { 'Cookie' => 'user_id' => '42' }).response
+page = ExamplePage.new(response: response)
+```
+
 ## Extending
 
 There are two main ways to extend `scraped` with your own custom logic - custom requests and decorated responses. Custom requests allow you to change where the scraper is getting its responses from, e.g. you might want to make requests to archive.org if the site you're scraping has disappeared. Decorated responses allow you to manipulate the response before it's passed to the scraper. Scraped comes with some [built in decorators](#built-in-decorators) for common tasks such as making all the link urls on the page absolute rather than relative.

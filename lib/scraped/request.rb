@@ -3,8 +3,9 @@ require 'scraped/response'
 
 module Scraped
   class Request
-    def initialize(url:, strategies: [Strategy::LiveRequest])
+    def initialize(url:, headers: {}, strategies: [Strategy::LiveRequest])
       @url = url
+      @headers = headers
       @strategies = strategies
     end
 
@@ -16,7 +17,7 @@ module Scraped
 
     private
 
-    attr_reader :url, :strategies
+    attr_reader :url, :headers, :strategies
 
     def first_successful_response
       @first_successful_response ||=
@@ -25,7 +26,7 @@ module Scraped
             strategy_config = { strategy: strategy_config }
           end
           strategy_class = strategy_config.delete(:strategy)
-          strategy_class.new(url: url, config: strategy_config).response
+          strategy_class.new(url: url, headers: headers, config: strategy_config).response
         end.reject(&:nil?).first
     end
   end
