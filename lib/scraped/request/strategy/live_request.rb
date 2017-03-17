@@ -7,7 +7,7 @@ module Scraped
       class LiveRequest < Strategy
         def response
           log "Fetching #{url}"
-          response = open(url)
+          response = open(url, headers)
           {
             status:  response.status.first.to_i,
             headers: response.meta,
