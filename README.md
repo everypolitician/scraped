@@ -28,7 +28,7 @@ To write a standard HTML scraper, start by creating a subclass of `Scraped::HTML
 
 ### Example scraping example.com
 
-Here's the source from [example.com](http://example.com):
+Here's the HTML source from the webpage at [example.com](http://example.com):
 
 ```html
 <html>
