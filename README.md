@@ -51,7 +51,7 @@ require 'scraped'
 
 class ExamplePage < Scraped::HTML
   field :title do
-    noko.at_css('h1').text
+    noko.at_xpath('//h1').text
   end
 
   field :more_info_url do
