@@ -24,7 +24,7 @@ Or install it yourself as:
 
 To write a standard HTML scraper, start by creating a subclass of `Scraped::HTML` for each _type_ of page you're scraping. Then specify the (data) fields you want to extract from that. You can control the strategy used to get the page, and decorate the response you get back to make it easier to parse.
 
-![basic Scraped process](scraped-process-for-readme.svg)
+![basic Scraped process](scraped-process-for-readme.png)
 
 ### Example scraping example.com
 
