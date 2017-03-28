@@ -4,11 +4,11 @@ describe Scraped::HTML do
   describe 'accessing HTML via nokogiri' do
     let(:html) do
       <<-HTML
-<p class="test-content">Hi there!</p>
-<p class="name">Members Page</p>
-<div class="member-info">
-  <p class="name">Alice</p>
-</div>
+        <p class="test-content">Hi there!</p>
+        <p class="name">Members Page</p>
+        <div class="member-info">
+          <p class="name">Alice</p>
+        </div>
       HTML
     end
 
