@@ -20,6 +20,8 @@ Or install it yourself as:
 
 ## Usage
 
+### HTML
+
 To write a standard HTML scraper, start by creating a subclass of
 `Scraped::HTML` for each _type_ of page you wish to scrape.
 
@@ -56,11 +58,44 @@ page.to_h
 # => { :title => "Example Domain", :more_information => "http://www.iana.org/domains/reserved" }
 ```
 
+### JSON
+
+JSON documents are handled in a similar way. Create a subclass of `Scraped::JSON` for each type of JSON document you wish to scrape.
+
+```ruby
+require 'scraped'
+
+class ExampleRecord < Scraped::JSON
+  field :name do
+    json[:name]
+  end
+
+  field :email do
+    json[:email_address]
+  end
+end
+```
+
+Again, create a new instance and pass in a `Scraped::Response` instance.
+
+```ruby
+page = ExampleRecord.new(response: Scraped::Request.new(url: 'http://example.com').response)
+
+record.name
+# => "John Doe"
+
+record.email
+# => "john_doe@example.com"
+
+record.to_h
+# => { :name => "John Doe", :email => "john_doe@example.com" }
+```
+
 ### Dealing with sections of a page
 
-When writing an HTML scraper you'll often need to deal with just a part of the page.
-For example you might want to scrape a table containing a list of people and some
-associated data.
+When writing a scraper you'll often need to deal with just a part of the document.
+
+For example you might want to scrape an HTML table containing a list of people and some associated data.
 
 To do this you can use the `fragment` method, passing it a hash with one entry
 where the key is the `noko` fragment you want to use and the value is the class
@@ -81,6 +116,41 @@ class AllMembersPage < Scraped::HTML
   field :members do
     noko.css('table.members-list tr').map do |row|
       fragment row => MemberRow
+    end
+  end
+end
+```
+
+The `fragment` method is also available in `Scraped::JSON`. This time, the key is the part of the JSON document you want to use.
+
+```JSON
+{
+  "House": "Upper",
+  "Members": [{
+    "ID": "001",
+    "Name": "John Doe"
+  }, {
+    "ID": "002",
+    "Name": "Jane Doe"
+  }]
+}
+```
+
+```Ruby
+class MemberRecord < Scraped::JSON
+  field :id do
+    json[:id]
+  end
+
+  field :name do
+    json[:name]
+  end
+end
+
+class MemberRecords < Scraped::JSON
+  field :members do
+    json[:members].map do |member|
+      fragment member => MemberRecord
     end
   end
 end
