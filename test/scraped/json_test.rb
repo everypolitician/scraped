@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'pry'
 
 describe Scraped::JSON do
   describe 'accessing JSON via nokogiri' do
