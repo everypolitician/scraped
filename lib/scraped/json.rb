@@ -3,7 +3,7 @@
 require 'json'
 
 module Scraped
-  class JSON < Scraped::Document
+  class JSON < Document
     private
 
     def initialize(json: nil, **args)
