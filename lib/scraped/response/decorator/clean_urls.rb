@@ -18,7 +18,7 @@ module Scraped
                 URI.decode(relative_url)
               ).gsub('[', '%5B').gsub(']', '%5D')).to_s
             end
-          rescue URI::InvalidURIError
+          rescue URI::Error
             relative_url
           end
 

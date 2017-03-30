@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.5.1 - 2017-03-28
+
+### Fixed
+
+- `Scraped::Response::Decorator::AbsoluteUrls` now handles all `URI::Error` exceptions. [#65](https://github.com/everypolitician/scraped/issues/65).
+
 ## 0.5.0 - 2017-03-17
 
 ### Added
