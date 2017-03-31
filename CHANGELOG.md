@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- `Scraped::Response::Decorator::AbsoluteUrls` now handles all `URI::Error` exceptions. [#65](https://github.com/everypolitician/scraped/issues/65).
+- `Scraped::Response::Decorator::CleanUrls` now handles all `URI::Error` exceptions. [#65](https://github.com/everypolitician/scraped/issues/65).
 
 ## 0.5.0 - 2017-03-17
 
