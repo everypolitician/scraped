@@ -6,7 +6,7 @@ If you need to write a webscraper (especially one that hits a page which lists a
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application’s Gemfile:
 
 ```ruby
 gem 'scraped'
@@ -22,11 +22,13 @@ Or install it yourself as:
 
 ## Usage
 
-To write a standard HTML scraper, start by creating a subclass of `Scraped::HTML` for each _type_ of page you're scraping. Then specify the (data) fields you want to extract from that. You can control the strategy used to get the page, and decorate the response you get back to make it easier to parse.
+Scraped currently has support for working with HTML and JSON documents.
 
-### Example scraping example.com
+To write a scraper, start by creating a subclass of `Scraped::HTML` or `Scraped::JSON` for each _type_ of page you’re scraping. Then specify the (data) fields you want to extract from that. You can control the strategy used to get the page, and decorate the response you get back to make it easier to parse.
 
-Here's the HTML source from the webpage at [example.com](http://example.com):
+### HTML
+
+Here’s the HTML source from the webpage at [example.com](http://example.com):
 
 ```html
 <html>
@@ -42,23 +44,23 @@ Here's the HTML source from the webpage at [example.com](http://example.com):
 </html>
 ```
 
-So, if that's your target and you want to get data such as **title** and **more info URL** from that page, you pick them out as fields with [Nokogiri](http://www.nokogiri.org/) (using CSS selectors, in this example):
+So, if that’s your target and you want to get data such as **title** and **more info URL** from that page, you pick them out as fields with [Nokogiri](http://www.nokogiri.org/) (using CSS selectors, in this example). Note that `ExamplePage` is a subclass of `Scraped::HTML` because it's specifically HTML that you’re scraping:
 
 ```ruby
 require 'scraped'
 
 class ExamplePage < Scraped::HTML
   field :title do
-    noko.at_css_('h1').text
+    noko.at_css('h1').text
   end
 
   field :more_info_url do
-    noko.xpath_at_('a/@href').text
+    noko.xpath_at('a/@href').text
   end
 end
 ```
 
-Now you've defined your `ExamplePage`, you can create a new instance and pass in a `Scraped::Response` instance. The resulting `page` has the data you've scraped:
+Now you’ve defined your `ExamplePage`, you can create a new instance and pass in a `Scraped::Response` instance. The resulting `page` has the data you’ve scraped:
 
 ```ruby
 page = ExamplePage.new(response: Scraped::Request.new(url: 'http://example.com').response)
@@ -73,11 +75,57 @@ page.to_h
 # => { :title => "Example Domain", :more_info_url => "http://www.iana.org/domains/reserved" }
 ```
 
-You can see that those fields now contain the data scraped from `ExamplePage`, and of course the `.to_h` is handy if you want to dump this into a database. That's why we call each data item you've picked out a `field` — if you're scraping data that's going into a database, often these will be fields on each record. 
+You can see that those fields now contain the data scraped from `ExamplePage`, and of course the `.to_h` is handy if you want to dump this into a database. That’s why we call each data item you’ve picked out a `field` — if you’re scraping data that’s going into a database, often these will be fields on each record. 
+
+### JSON
+
+JSON documents are handled in a similar way. 
+
+If `http://example.com/data.json` returns something like this:
+
+```
+{
+  name: 'John Doe',
+  email: 'john_doe@example.com'
+}
+```
+
+This time, create a subclass of `Scraped::JSON`. Fields are typically easier to extract from a JSON document because the data is already structured (hence there’s no `noko` here):
+
+```ruby
+require 'scraped'
+
+class ExampleRecord < Scraped::JSON
+  field :name do
+    json[:name]
+  end
+
+  field :email do
+    json[:email_address]
+  end
+end
+```
+
+Again, create a new instance and pass in a `Scraped::Response` instance.
+
+```ruby
+page = ExampleRecord.new(response: Scraped::Request.new(url: 'http://example.com/data.json').response)
+
+record.name
+# => "John Doe"
+
+record.email
+# => "john_doe@example.com"
+
+record.to_h
+# => { :name => "John Doe", :email => "john_doe@example.com" }
+```
+
+In practice, you may be accessing the JSON data via an API rather than as a static URL, but in either case `scraped` handles this as a simple request and response.
 
 ### Dealing with sections of a page
 
-In the example above, the scraper was handling a whole webpage; but often you're only interested in working with part of a page. For example, you might want to scrape just a table containing a list of people and some associated data.
+In the example (scraping `example.com`) above, the scraper was handling a whole webpage; but often you’re only interested in working with part of a page. For example, you might want to scrape just a table containing a list of people and some associated data.
 
 To do this, use the `fragment` method, passing it a one-entry hash: the key is the `noko` fragment you want to use, and the value is the class that should handle that fragment.
 
@@ -109,17 +157,52 @@ end
 
 If you restrict your class to a fragment like this, the CSS or XPath expressions you use to identify the data you want can often be simpler. In the example above, `td[2]` is the column with index `2` (that is, the third column) in the table row.
 
+The `fragment` method is also available in `Scraped::JSON`. This time, the key is the part of the JSON document you want to use.
+
+```JSON
+{
+  "House": "Upper",
+  "Members": [{
+    "ID": "001",
+    "Name": "John Doe"
+  }, {
+    "ID": "002",
+    "Name": "Jane Doe"
+  }]
+}
+```
+
+```Ruby
+class MemberRecord < Scraped::JSON
+  field :id do
+    json[:id]
+  end
+
+  field :name do
+    json[:name]
+  end
+end
+
+class MemberRecords < Scraped::JSON
+  field :members do
+    json[:members].map do |member|
+      fragment member => MemberRecord
+    end
+  end
+end
+```
+
 ## Extending
 
 There are two main ways to extend `scraped` with your own custom logic — custom request strategies and decorated responses.
 
-Request strategies allow you to change _where_ (and perhaps _how_) the scraper gets its responses from. By default, `scraped` uses its built-in `LiveRequest` strategy, which attempts to make an HTTP request to the URL provided. The response to that request is typically an HTML page, and it's that response that gets passed to your scraper to work on.
+Request strategies allow you to change _where_ (and perhaps _how_) the scraper gets its responses from. By default, `scraped` uses its built-in `LiveRequest` strategy, which attempts to make an HTTP request to the URL provided. The response to that request is typically an HTML page, and it’s that response that gets passed to your scraper to work on.
 
-When you need more control over how this works, you can create [custom request strategies](#custom-request-strategies). For example, you might want to make requests to `archive.org` if the site you're scraping is unavailable at the moment the scraper runs. Or you may want to use a cache and only refresh on certain calendar conditions. Or negotiate authentication before making the request.
+When you need more control over how this works, you can create [custom request strategies](#custom-request-strategies). For example, you might want to make requests to `archive.org` if the site you’re scraping is unavailable at the moment the scraper runs. Or you may want to use a cache and only refresh on certain calendar conditions. Or negotiate authentication before making the request.
 
-Decorated responses allow you to manipulate the response before it's passed to the scraper. This is useful because sometimes your scraper's code will be much simpler if you clean up or standardise the incoming page before you parse it.
+Decorated responses allow you to manipulate the response before it’s passed to the scraper. This is useful because sometimes your scraper’s code will be much simpler if you clean up or standardise the incoming page before you parse it.
  
-`scraped` comes with some [built-in decorators](#built-in-decorators) for common tasks. For example, `CleanUrls` (see below) tidies up all the link and image source URLs before your scraper code extracts them. You can write your own [custom decorators](#custom-response-decorators) too, to fix up something specific or idiosyncratic about the pages you're scraping.
+`scraped` comes with some [built-in decorators](#built-in-decorators) for common tasks. For example, `CleanUrls` (see below) tidies up all the link and image source URLs before your scraper code extracts them. You can write your own [custom decorators](#custom-response-decorators) too, to fix up something specific or idiosyncratic about the pages you’re scraping.
 
 ### Custom request strategies
 
@@ -152,7 +235,7 @@ Note that you can provide multiple strategies, and `scraped` will try each in tu
 
 ### Custom response decorators
 
-We've found decorators useful in our own work. For example, we "unspan" fiddly HTML tables that have `colspan` in them, because that makes it much easier to extract data once tables have been normalised for every row to have the same number of columns. Sometimes it's helpful to clean up whitespace by converting HTML entities such as `&nbsp;` before parsing too.
+We’ve found decorators useful in our own work. For example, we "unspan" fiddly HTML tables that have `colspan` in them, because that makes it much easier to extract data once tables have been normalised for every row to have the same number of columns. Sometimes it’s helpful to clean up whitespace by converting HTML entities such as `&nbsp;` before parsing too.
 
 To manipulate the response before it is processed by the scraper, create a class that subclasses `Scraped::Response::Decorator`. This class must define
 a `body` method, as well as (optionally) `url`, `status`, or `headers`.
@@ -203,7 +286,7 @@ The code above adds this header to the response: `X-Greeting: Hello, world`.
 
 ### Passing request headers
 
-Note that you don't need to define a custom strategy if you just want to set headers on a request. You can explicitly pass a `headers:` argument to `Scraped::Request.new`:
+Note that you don’t need to define a custom strategy if you just want to set headers on a request. You can explicitly pass a `headers:` argument to `Scraped::Request.new`:
 
 ```ruby
 response = Scraped::Request.new(url: 'http://example.com', headers: { 'Cookie' => 'user_id' => '42' }).response
@@ -213,16 +296,16 @@ page = ExamplePage.new(response: response)
 #### Inheritance with decorators
 
 When you inherit from a class that already has decorators the child class will
-also inherit the parent's decorators. There's currently no way to re-order or
+also inherit the parent’s decorators. There’s currently no way to re-order or
 remove decorators in child classes, though that _may_ be added in the future.
 
 ### Built-in decorators
 
 #### Clean link and image URLs
 
-If your scraper is capturing URLs, you may find that they occur in the HTML as _relative_ URLs. It's better to convert them all to fully-qualified absolute URLs before your scraper extracts them. This is such a common inconvenience that the `scraped` gem comes with support for this out of the box with the `Scraped::Response::Decorator::CleanUrls` decorator.
+If your scraper is capturing URLs, you may find that they occur in the HTML as _relative_ URLs. It’s better to convert them all to fully-qualified absolute URLs before your scraper extracts them. This is such a common inconvenience that the `scraped` gem comes with support for this out of the box with the `Scraped::Response::Decorator::CleanUrls` decorator.
 
-The `CleanUrls` decorator also fixes up any encoding issues the URL may have, as part of making sure it's fully-qualified.
+The `CleanUrls` decorator also fixes up any encoding issues the URL may have, as part of making sure it’s fully-qualified.
 
 So if you apply the `CleanUrls` decorator, any `src` or `href` attributes of image or anchor elements respectively will be correctly encoded and made absolute.
 
@@ -241,7 +324,7 @@ end
 
 ## Declarative tests
 
-We've also been working on making it easy to write simple, declarative tests for scrapers: see [scraper-test](https://github.com/everypolitician/scraper_test). That's useful because often you can state very clearly what data (the fields and their values) you're expecting your scraper to return before you've even started writing it.
+We’ve also been working on making it easy to write simple, declarative tests for scrapers: see [scraper-test](https://github.com/everypolitician/scraper_test). That’s useful because often you can state very clearly what data (the fields and their values) you’re expecting your scraper to return before you’ve even started writing it.
 
 ## Development
 
