@@ -2,7 +2,7 @@
 
 Write declarative scrapers in Ruby.
 
-If you need to write a webscraper (especially one that hits a page which lists a load of other pages, and jumps into each of _those_ pages to pull out the same data) the `scraped` gem will help you write it quickly and clearly.
+If you need to write a webscraper (maybe to scrape a single page, or one that hits a page which lists a load of other pages, and jumps into each of _those_ pages to pull out the same data) the `scraped` gem will help you write it quickly and clearly.
 
 ## Installation
 
