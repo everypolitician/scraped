@@ -25,7 +25,9 @@ Or install it yourself as:
 Scraped currently has support for working with HTML and JSON documents
 (pull requests for other formats are welcome).
 
-To write a scraper, start by creating a subclass of `Scraped::HTML` or `Scraped::JSON` for each _type_ of page you’re scraping. Then specify the (data) fields you want to extract from that. You can control the strategy used to get the page, and decorate the response you get back to make it easier to parse.
+To write a scraper, start by creating a subclass of `Scraped::HTML` or `Scraped::JSON` for each type of page you’re scraping. The choice of class here means you get the most helpful one — the way you'll want to work with an HTML page is probably very different from JSON. See the following descriptions to see this at work.
+
+Then specify the (data) fields you want to extract from that. You can control the strategy used to get the page, and decorate the response you get back to make it easier to parse.
 
 ### HTML
 
