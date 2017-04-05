@@ -86,10 +86,10 @@ JSON documents are handled in a similar way.
 
 If `http://example.com/data.json` returns something like this:
 
-```
+```json
 {
-  name: 'John Doe',
-  email: 'john_doe@example.com'
+  "name": "John Doe",
+  "email": "john_doe@example.com"
 }
 ```
 
