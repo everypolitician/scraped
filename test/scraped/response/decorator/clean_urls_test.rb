@@ -143,4 +143,18 @@ describe Scraped::Response::Decorator::CleanUrls do
   it 'ignores invalid mailto links' do
     page.broken_mailto_link.must_equal 'mailto:notanemail'
   end
+
+  describe 'AbsoluteUrls' do
+    it 'returns CleanUrls' do
+      check_warning = lambda do |msg|
+        msg.must_equal '`Scraped::Response::Decorator::AbsoluteUrls` has been deprecated. ' \
+          'Use `Scraped::Response::Decorator::CleanUrls` instead.'
+        nil
+      end
+
+      Scraped::Response::Decorator.stub(:warn, check_warning) do
+        Scraped::Response::Decorator::AbsoluteUrls.must_equal Scraped::Response::Decorator::CleanUrls
+      end
+    end
+  end
 end

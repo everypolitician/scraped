@@ -40,6 +40,17 @@ module Scraped
           AbsoluteUrl.new(base_url: url, relative_url: relative_url).to_s
         end
       end
+
+      # The 'AbsoluteUrls' class was renamed to 'CleanUrls', so output a
+      # deprecation warning when a user tries to use it.
+      #
+      # Modified version of http://myronmars.to/n/dev-blog/2011/09/deprecating-constants-and-classes-in-ruby
+      def self.const_missing(const_name)
+        super unless const_name == :AbsoluteUrls
+        warn '`Scraped::Response::Decorator::AbsoluteUrls` has been deprecated. ' \
+          'Use `Scraped::Response::Decorator::CleanUrls` instead.'
+        CleanUrls
+      end
     end
   end
 end
