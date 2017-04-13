@@ -6,3 +6,11 @@ inherit_from:
 
 Style/SingleLineBlockParams:
   Enabled: false
+
+# Minitest::Spec uses long blocks to contains the specs, so disable this check
+# for the tests.
+Metrics/BlockLength:
+  Max: 10
+  Exclude:
+    - './scraped.gemspec'
+    - 'test/**/*'
