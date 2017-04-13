@@ -70,4 +70,16 @@ describe Scraped do
       ).body.must_equal 'HELLO'
     end
   end
+
+  describe 'scrape helper method' do
+    let(:page) { Scraped.scrape('http://example.com' => PageWithDecorators) }
+
+    it 'uses the expected class' do
+      page.class.must_equal PageWithDecorators
+    end
+
+    it 'has the expected body' do
+      page.body.must_equal 'HELLO'
+    end
+  end
 end
