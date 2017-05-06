@@ -145,16 +145,19 @@ describe Scraped::Response::Decorator::CleanUrls do
   end
 
   describe 'AbsoluteUrls' do
-    it 'returns CleanUrls' do
-      check_warning = lambda do |msg|
-        msg.must_equal '`Scraped::Response::Decorator::AbsoluteUrls` has been deprecated. ' \
-          'Use `Scraped::Response::Decorator::CleanUrls` instead.'
-        nil
+    it 'gives a deprecation warning' do
+      _out, err = capture_io do
+        klass = Class.new(Scraped::HTML) do
+          decorator Scraped::Response::Decorator::AbsoluteUrls
+
+          field :relative_image do
+            noko.at_css('.relative-image/@src').text
+          end
+        end
+        klass.new(response: response).relative_image.must_equal 'http://example.com/person-123.jpg'
       end
 
-      Scraped::Response::Decorator.stub(:warn, check_warning) do
-        Scraped::Response::Decorator::AbsoluteUrls.must_equal Scraped::Response::Decorator::CleanUrls
-      end
+      err.must_include 'has been deprecated'
     end
   end
 end
