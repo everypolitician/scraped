@@ -143,4 +143,21 @@ describe Scraped::Response::Decorator::CleanUrls do
   it 'ignores invalid mailto links' do
     page.broken_mailto_link.must_equal 'mailto:notanemail'
   end
+
+  describe 'AbsoluteUrls' do
+    it 'gives a deprecation warning' do
+      _out, err = capture_io do
+        klass = Class.new(Scraped::HTML) do
+          decorator Scraped::Response::Decorator::AbsoluteUrls
+
+          field :relative_image do
+            noko.at_css('.relative-image/@src').text
+          end
+        end
+        klass.new(response: response).relative_image.must_equal 'http://example.com/person-123.jpg'
+      end
+
+      err.must_include 'has been deprecated'
+    end
+  end
 end
