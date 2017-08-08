@@ -16,6 +16,7 @@ describe Scraped::Response::Decorator::CleanUrls do
     <a class="bracketed-link" href="/person[123]">Person 123</a>
     <a class="relative-link-with-unencoded-space" href="/person 123">Person 123</a>
     <a class="encoded-url" href="/person%20123">Person 123</a>
+    <a class="badly-encoded-url" href="http://cir.duma.gov.ru/servlet?QueryString=%2FGD_%C4%C5%CF%D3%D2+%C8.%CD.%22">Person 123</a>
     <a class="broken-mailto-link" href="mailto:notanemail">Person 123</a>
     BODY
   end
@@ -75,6 +76,10 @@ describe Scraped::Response::Decorator::CleanUrls do
 
     field :encoded_url do
       link('.encoded-url')
+    end
+
+    field :badly_encoded_url do
+      link('.badly-encoded-url')
     end
 
     field :broken_mailto_link do
@@ -138,6 +143,10 @@ describe Scraped::Response::Decorator::CleanUrls do
 
   it 'should not encode already encoded URLs' do
     page.encoded_url.must_equal 'http://example.com/person%20123'
+  end
+
+  it 'should gracefully cope with badly encoded URLs' do
+    page.badly_encoded_url.must_equal 'http://cir.duma.gov.ru/servlet?QueryString=%2FGD_%C4%C5%CF%D3%D2+%C8.%CD.%22'
   end
 
   it 'ignores invalid mailto links' do
