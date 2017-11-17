@@ -58,7 +58,7 @@ class ExamplePage < Scraped::HTML
   end
 
   field :more_info_url do
-    noko.xpath_at('a/@href').text
+    noko.at_css('a/@href').text
   end
 end
 ```
