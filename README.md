@@ -58,7 +58,7 @@ class ExamplePage < Scraped::HTML
   end
 
   field :more_info_url do
-    noko.xpath_at('a/@href').text
+    noko.at_css('a/@href').text
   end
 end
 ```
@@ -72,10 +72,10 @@ page.title
 # => "Example Domain"
 
 page.more_info_url
-# => "http://www.iana.org/domains/reserved"
+# => "http://www.iana.org/domains/example"
 
 page.to_h
-# => { :title => "Example Domain", :more_info_url => "http://www.iana.org/domains/reserved" }
+# => { :title => "Example Domain", :more_info_url => "http://www.iana.org/domains/example" }
 ```
 
 You can see that those fields now contain the data scraped from `ExamplePage`, and of course the `.to_h` is handy if you want to dump this into a database. That’s why we call each data item you’ve picked out a `field` — if you’re scraping data that’s going into a database, often these will be fields on each record. 

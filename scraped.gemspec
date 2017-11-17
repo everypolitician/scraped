@@ -1,5 +1,3 @@
-# coding: utf-8
-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'scraped/version'
@@ -20,13 +18,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'nokogiri'
   spec.add_runtime_dependency 'field_serializer', '>= 0.3.0'
+  spec.add_runtime_dependency 'nokogiri'
   spec.add_runtime_dependency 'require_all'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
-  spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'pry', '~> 0.10'
+  spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rubocop', '~> 0.44'
 end
