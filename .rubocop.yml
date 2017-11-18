@@ -3,6 +3,7 @@ AllCops:
 
 inherit_from:
   - https://raw.githubusercontent.com/everypolitician/everypolitician-data/master/.rubocop_base.yml
+  - .rubocop_todo.yml
 
 Style/SingleLineBlockParams:
   Enabled: false
